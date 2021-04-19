@@ -1,9 +1,28 @@
 import React, { Component } from "react";
+import { Button } from "../../Components/Button";
 import { DropdownField } from "../../Components/Dropdown";
 import { Heading1, Heading3 } from "../../Components/Heading";
 import { TextField } from "../../Components/TextField";
 
 class UserRegistrationForm extends Component {
+  state = {
+    values: {
+      username: "",
+      fullName: "",
+      password: "",
+      phoneNumber: "",
+      email: "",
+      userType: "",
+    },
+    errors: {
+      username: "",
+      fullName: "",
+      password: "",
+      phoneNumber: "",
+      email: "",
+      userType: "",
+    },
+  };
   render() {
     return (
       <form>
@@ -32,15 +51,30 @@ class UserRegistrationForm extends Component {
             <TextField label="Email" />
           </div>
           <div className="col-6">
-            <DropdownField label="User Type">
-              <option>Customer</option>
-              <option>Admin</option>
-            </DropdownField>
+            <span type="label">User Type</span>
+
+            <div className="btn-group">
+              <button
+                type="button"
+                className="btn dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <span className="float-left">Customer</span>
+
+                {/* <span className="sr-only">Toggle Dropdown</span> */}
+              </button>
+              <div className="dropdown-menu dropdown-menu-right">
+                <option>Customer</option>
+                <option>Admin</option>
+              </div>
+            </div>
           </div>
         </div>
         <div>
-          <button className="btn btn-success mr-2">Register</button>
-          <button className="btn btn-primary">Update</button>
+          <Button className="btn btn-success mr-2">Register</Button>
+          <Button className="btn btn-primary">Update</Button>
         </div>
       </form>
     );

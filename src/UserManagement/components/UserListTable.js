@@ -1,8 +1,47 @@
 import React, { Component } from "react";
 import { Heading1, Heading3 } from "../../Components/Heading";
 import { Table, Thead, Tbody, Tr, Td, Th } from "../../Components/Table";
+import { connect } from "react-redux";
+import {
+  editUserAction,
+  removeUserAction,
+} from "../../redux/Actions/UserManagementActions";
+import { Button } from "../../Components/Button";
 
 class UserListTable extends Component {
+  renderUserList = () => {
+    return this.props.userList.map((user, index) => {
+      return (
+        <Tr key={index}>
+          <Th>{user.id}</Th>
+          <Th>{user.username}</Th>
+          <Th>{user.fullName}</Th>
+          <Th>{user.password}</Th>
+          <Th>{user.email}</Th>
+          <Th>{user.phoneNumber}</Th>
+          <Th>{user.userType}</Th>
+          <Th>
+            <Button
+              onClick={() => {
+                this.props.dispatch(editUserAction(user));
+              }}
+              className="btn btn-primary mr-2"
+            >
+              Edit
+            </Button>
+            <Button
+              onClick={() => {
+                this.props.dispatch(removeUserAction(user.id));
+              }}
+              className="btn btn-danger"
+            >
+              Remove
+            </Button>
+          </Th>
+        </Tr>
+      );
+    });
+  };
   render() {
     return (
       <div>
@@ -10,53 +49,27 @@ class UserListTable extends Component {
         <Table>
           <Thead>
             <Tr>
-              <Td>Id</Td>
-              <Td>Username</Td>
-              <Td>Full Name</Td>
-              <Td>Password</Td>
-              <Td>Email</Td>
-              <Td>Phone Number</Td>
-              <Td>User Type</Td>
-              <Td></Td>
-              <Td></Td>
+              <Th>Id</Th>
+              <Th>Username</Th>
+              <Th>Full Name</Th>
+              <Th>Password</Th>
+              <Th>Email</Th>
+              <Th>Phone Number</Th>
+              <Th>User Type</Th>
+              <Th></Th>
             </Tr>
           </Thead>
-          <Tbody>
-            <Tr>
-              <Td>1</Td>
-              <Td>camha1</Td>
-              <Td>Camha1 Nguyen</Td>
-              <Td>123</Td>
-              <Td>camha1@gmail.com</Td>
-              <Td>123456789</Td>
-              <Td>Admin</Td>
-              <Td>
-                <button className="btn btn-primary">Edit User</button>
-              </Td>
-              <Td>
-                <button className="btn btn-danger">Remove User</button>
-              </Td>
-            </Tr>
-            <Tr>
-              <Td>2</Td>
-              <Td>camha2</Td>
-              <Td>Camha2 Nguyen</Td>
-              <Td>123</Td>
-              <Td>camha2@gmail.com</Td>
-              <Td>123456789</Td>
-              <Td>Customer</Td>
-              <Td>
-                <button className="btn btn-primary">Edit User</button>
-              </Td>
-              <Td>
-                <button className="btn btn-danger">Remove User</button>
-              </Td>
-            </Tr>
-          </Tbody>
+          <Tbody>{this.renderUserList()}</Tbody>
         </Table>
       </div>
     );
   }
 }
 
-export default UserListTable;
+const mapStateToProps = (state) => {
+  return {
+    userList: state.UserManagementReducer.userList,
+  };
+};
+
+export default connect(mapStateToProps)(UserListTable);

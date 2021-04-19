@@ -33,7 +33,7 @@ export const Td = styled.td`
 `;
 
 export const Th = styled.th`
-    background-color: #000;
+    background-color: #fff;
     color: #343a40
     vertical-align: bottom;
     text-align: inherit;
