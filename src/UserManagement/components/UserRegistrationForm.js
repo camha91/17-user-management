@@ -3,6 +3,8 @@ import { Button } from "../../Components/Button";
 import { DropdownField } from "../../Components/Dropdown";
 import { Heading1, Heading3 } from "../../Components/Heading";
 import { TextField } from "../../Components/TextField";
+import { registerUserAction } from "../../redux/Actions/UserManagementActions";
+import { connect } from "react-redux";
 
 class UserRegistrationForm extends Component {
   state = {
@@ -20,19 +22,19 @@ class UserRegistrationForm extends Component {
       password: "",
       phoneNumber: "",
       email: "",
-      userType: "",
     },
   };
 
   handleChangeValue = (e) => {
     const { name, value } = e.target;
-    console.log(e.target.value);
 
     const newValues = { ...this.state.values, [name]: value };
     const newErrors = { ...this.state.errors };
 
     if (value.trim() === "") {
       newErrors[name] = name.toUpperCase() + " is invalid!";
+    } else {
+      newErrors[name] = "";
     }
 
     if (name === "email") {
@@ -55,6 +57,8 @@ class UserRegistrationForm extends Component {
       }
     }
 
+    console.log(newValues.userType);
+
     this.setState({
       values: newValues,
       errors: newErrors,
@@ -63,11 +67,46 @@ class UserRegistrationForm extends Component {
 
   handleRegister = (e) => {
     e.preventDefault();
+
+    const { values, errors } = this.state;
+
+    // Create user object
+    const newUser = {
+      id: Date.now(),
+      username: values.username,
+      fullName: values.fullName,
+      password: values.password,
+      phoneNumber: values.phoneNumber,
+      email: values.email,
+      userType: values.userType,
+    };
+    console.log(newUser);
+
+    let valid = true;
+
+    for (let key in values) {
+      if (values[key] === "") {
+        valid = false;
+      }
+    }
+
+    for (let key in errors) {
+      if (errors[key] !== "") {
+        valid = false;
+      }
+    }
+
+    if (!valid) {
+      alert("Please check all fields!");
+      return;
+    }
+
+    this.props.dispatch(registerUserAction(newUser));
   };
 
   render() {
     return (
-      <form>
+      <form onSubmit={this.handleRegister}>
         <Heading1>User Registration</Heading1>
 
         <div className="row">
@@ -101,7 +140,7 @@ class UserRegistrationForm extends Component {
           <div className="col-6">
             <TextField
               value={this.state.values.password}
-              type="text"
+              type="password"
               name="password"
               onChange={this.handleChangeValue}
               label="Password"
@@ -136,7 +175,7 @@ class UserRegistrationForm extends Component {
             <span className="text text-danger">{this.state.errors.email}</span>
           </div>
           <div className="col-6">
-            <span type="label">User Type</span>
+            {/* <span type="label">User Type</span>
 
             <div className="btn-group">
               <button
@@ -152,16 +191,22 @@ class UserRegistrationForm extends Component {
                 <option>Customer</option>
                 <option>Admin</option>
               </div>
-            </div>
+            </div> */}
+            <DropdownField
+              value={this.state.values.userType}
+              type="dropdown"
+              name="userType"
+              onChange={this.handleChangeValue}
+              label="User Type"
+            >
+              {this.props.userType.map((type, index) => {
+                return <option key={index}>{type.userType}</option>;
+              })}
+            </DropdownField>
           </div>
         </div>
         <div>
-          <Button
-            onClick={this.handleRegister}
-            className="btn btn-success mr-2"
-          >
-            Register
-          </Button>
+          <Button className="btn btn-success mr-2">Register</Button>
           <Button onClick={() => {}} className="btn btn-primary">
             Update
           </Button>
@@ -171,4 +216,10 @@ class UserRegistrationForm extends Component {
   }
 }
 
-export default UserRegistrationForm;
+const mapStateToProps = (state) => {
+  return {
+    userType: state.UserManagementReducer.userType,
+  };
+};
+
+export default connect(mapStateToProps)(UserRegistrationForm);

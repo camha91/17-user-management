@@ -13,14 +13,14 @@ class UserListTable extends Component {
     return this.props.userList.map((user, index) => {
       return (
         <Tr key={index}>
-          <Th>{user.id}</Th>
-          <Th>{user.username}</Th>
-          <Th>{user.fullName}</Th>
-          <Th>{user.password}</Th>
-          <Th>{user.email}</Th>
-          <Th>{user.phoneNumber}</Th>
-          <Th>{user.userType}</Th>
-          <Th>
+          <Td>{user.id}</Td>
+          <Td>{user.username}</Td>
+          <Td>{user.fullName}</Td>
+          <Td>{user.password}</Td>
+          <Td>{user.email}</Td>
+          <Td>{user.phoneNumber}</Td>
+          <Td>{user.userType}</Td>
+          <Td>
             <Button
               onClick={() => {
                 this.props.dispatch(editUserAction(user));
@@ -37,7 +37,7 @@ class UserListTable extends Component {
             >
               Remove
             </Button>
-          </Th>
+          </Td>
         </Tr>
       );
     });
