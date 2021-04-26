@@ -1,28 +1,29 @@
 import React, { Component } from "react";
-import { Heading1, Heading3 } from "../../Components/Heading";
-import { Table, Thead, Tbody, Tr, Td, Th } from "../../Components/Table";
 import { connect } from "react-redux";
+import { Button } from "../../Components/Button";
+import { Heading3 } from "../../Components/Heading";
+import { Table, Tbody, Td, Th, Thead, Tr } from "../../Components/Table";
 import {
   editUserAction,
   removeUserAction,
 } from "../../redux/Actions/UserManagementActions";
-import { Button } from "../../Components/Button";
 
 class UserListTable extends Component {
   renderUserList = () => {
     return this.props.userList.map((user, index) => {
       return (
         <Tr key={index}>
-          <Td>{user.id}</Td>
+          <Td>{index + 1}</Td>
           <Td>{user.username}</Td>
           <Td>{user.fullName}</Td>
           <Td>{user.password}</Td>
           <Td>{user.email}</Td>
           <Td>{user.phoneNumber}</Td>
-          <Td>{user.userType}</Td>
+          <Td>{this.props.userType[user.userType]}</Td>
           <Td>
             <Button
               onClick={() => {
+                console.log("click edit");
                 this.props.dispatch(editUserAction(user));
               }}
               className="btn btn-primary mr-2"
@@ -31,7 +32,7 @@ class UserListTable extends Component {
             </Button>
             <Button
               onClick={() => {
-                this.props.dispatch(removeUserAction(user.id));
+                this.props.dispatch(removeUserAction(user.userId));
               }}
               className="btn btn-danger"
             >
@@ -49,7 +50,7 @@ class UserListTable extends Component {
         <Table>
           <Thead>
             <Tr>
-              <Th>Id</Th>
+              <Th>Order ID</Th>
               <Th>Username</Th>
               <Th>Full Name</Th>
               <Th>Password</Th>
@@ -68,7 +69,7 @@ class UserListTable extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    userList: state.UserManagementReducer.userList,
+    ...state.UserManagementReducer,
   };
 };
 

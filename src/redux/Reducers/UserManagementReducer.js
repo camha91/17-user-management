@@ -1,66 +1,63 @@
 import {
-  change_user,
-  edit_user,
-  register_user,
-  remove_user,
+  EDIT_USER,
+  REGISTER_USER,
+  REMOVE_USER,
+  UPDATE_USER,
 } from "../Types/UserManagementTypes";
 
-const userType = ["Customer", "Admin", "Editor"];
-
 const initialState = {
-  userType: [
-    {
-      id: 1,
-      userType: userType[0],
-    },
-    {
-      id: 2,
-      userType: userType[1],
-    },
-    {
-      id: 3,
-      userType: userType[2],
-    },
-  ],
+  userType: { 1: "Customer", 2: "Admin", 3: "Editor" },
   userList: [
     {
-      id: 1,
+      orderId: 1,
+      userId: 1,
       username: "camha1",
-      fullName: "Camha1 Nguyen",
+      fullName: "Camha Nguyen",
       password: "123",
       email: "camha1@gmail.com",
       phoneNumber: 123,
-      userType: userType[0],
+      userType: 1,
     },
     {
-      id: 2,
+      orderId: 2,
+      userId: 2,
       username: "camha2",
       fullName: "Camha2 Nguyen",
       password: "123",
       email: "camha2@gmail.com",
       phoneNumber: 123,
-      userType: userType[1],
+      userType: 2,
     },
   ],
   userEdit: {
-    id: 1,
+    userId: 321321,
     username: "camha1",
     fullName: "Camha1 Nguyen",
     password: "123",
     email: "camha1@gmail.com",
     phoneNumber: 123,
-    userType: "Admin",
+    userType: 1,
   },
 };
 
 const UserManagementReducer = (state = initialState, action) => {
   switch (action.type) {
-    case register_user: {
+    case REGISTER_USER: {
       const userListUpdate = [...state.userList];
+      const newUser = {
+        userId: Date.now(),
+        username: action.newUser.username,
+        fullName: action.newUser.fullName,
+        password: action.newUser.password,
+        phoneNumber: action.newUser.phoneNumber,
+        email: action.newUser.email,
+        userType: action.newUser.userType,
+      };
+      console.log(newUser);
+
       const index = userListUpdate.findIndex(
         (user) => user.username === action.newUser.username
       );
-      console.log(index);
 
       // Find if the username is already exist in userList
       if (index !== -1) {
@@ -69,23 +66,64 @@ const UserManagementReducer = (state = initialState, action) => {
       }
 
       // username is not existed in the list, add that new user to the list
-      state.userList = [...userListUpdate, action.newUser];
+      state.userList = [...userListUpdate, newUser];
 
-      console.log(state.userList);
       alert("Register successfully!");
 
       return { ...state };
     }
-    case change_user: {
+
+    case UPDATE_USER: {
+      const checkUsername = state.userList.findIndex(
+        (user) => user.username === action.user.username
+      );
+
+      if (checkUsername !== -1) {
+        alert("Username is already exist!");
+        return { ...state };
+      }
+
+      console.log("action.user: ", action.user);
+      // Edit userEdit
+      state.userEdit = {
+        ...state.userEdit,
+        username: action.user.username,
+        fullName: action.user.fullName,
+        password: action.user.password,
+        email: action.user.email,
+        phoneNumber: action.user.phoneNumber,
+        userType: action.user.userType,
+      };
+      console.log("state.userEdit: ", state.userEdit);
+
+      // Find the id in the userList that match with the id from user to edit
+      const userListUpdate = [...state.userList];
+      const checkUserId = userListUpdate.findIndex(
+        (user) => user.userId === state.userEdit.userId
+      );
+
+      // if match id
+      if (checkUserId !== -1) {
+        userListUpdate[checkUserId] = state.userEdit;
+      }
+
+      console.log("userListUpdate: ", userListUpdate);
+
+      state.userList = userListUpdate;
+
       return { ...state };
     }
-    case edit_user: {
-      return { ...state };
+    case EDIT_USER: {
+      // Fill in the fields to edit user
+      console.log("action edit_user: ", action);
+      return { ...state, userEdit: action.user };
     }
-    case remove_user: {
+    case REMOVE_USER: {
       return {
         ...state,
-        userList: state.userList.filter((user) => user.id !== action.userId),
+        userList: state.userList.filter(
+          (user) => user.userId !== action.userId
+        ),
       };
     }
     default:

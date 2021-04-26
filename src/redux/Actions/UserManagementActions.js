@@ -1,26 +1,34 @@
 import {
-  change_user,
-  edit_user,
-  register_user,
-  remove_user,
+  EDIT_USER,
+  REGISTER_USER,
+  REMOVE_USER,
+  UPDATE_USER,
 } from "../Types/UserManagementTypes";
 
 export const registerUserAction = (newUser) => ({
-  type: register_user,
+  type: REGISTER_USER,
   newUser,
 });
 
-export const changeUserAction = (user) => ({
-  type: change_user,
+export const updateUserAction = (user) => ({
+  type: UPDATE_USER,
   user,
 });
 
-export const editUserAction = (user) => ({
-  type: edit_user,
-  user,
-});
+// export const editUserAction = (user) => ({
+//   type: edit_user,
+//   user,
+// });
+
+export const editUserAction = (user) => {
+  console.log("user: ", user);
+  return {
+    type: EDIT_USER,
+    user,
+  };
+};
 
 export const removeUserAction = (userId) => ({
-  type: remove_user,
+  type: REMOVE_USER,
   userId,
 });

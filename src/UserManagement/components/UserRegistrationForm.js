@@ -1,10 +1,13 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Button } from "../../Components/Button";
 import { DropdownField } from "../../Components/Dropdown";
-import { Heading1, Heading3 } from "../../Components/Heading";
+import { Heading1 } from "../../Components/Heading";
 import { TextField } from "../../Components/TextField";
-import { registerUserAction } from "../../redux/Actions/UserManagementActions";
-import { connect } from "react-redux";
+import {
+  registerUserAction,
+  updateUserAction,
+} from "../../redux/Actions/UserManagementActions";
 
 class UserRegistrationForm extends Component {
   state = {
@@ -14,7 +17,7 @@ class UserRegistrationForm extends Component {
       password: "",
       phoneNumber: "",
       email: "",
-      userType: "",
+      userType: "1",
     },
     errors: {
       username: "",
@@ -57,8 +60,6 @@ class UserRegistrationForm extends Component {
       }
     }
 
-    console.log(newValues.userType);
-
     this.setState({
       values: newValues,
       errors: newErrors,
@@ -69,18 +70,6 @@ class UserRegistrationForm extends Component {
     e.preventDefault();
 
     const { values, errors } = this.state;
-
-    // Create user object
-    const newUser = {
-      id: Date.now(),
-      username: values.username,
-      fullName: values.fullName,
-      password: values.password,
-      phoneNumber: values.phoneNumber,
-      email: values.email,
-      userType: values.userType,
-    };
-    console.log(newUser);
 
     let valid = true;
 
@@ -101,7 +90,19 @@ class UserRegistrationForm extends Component {
       return;
     }
 
-    this.props.dispatch(registerUserAction(newUser));
+    this.props.dispatch(registerUserAction(values));
+  };
+
+  renderUserType = () => {
+    const { userType } = this.props;
+
+    return Object.entries(userType).map(([propsUserType, type], index) => {
+      return (
+        <option value={propsUserType} key={index}>
+          {type}
+        </option>
+      );
+    });
   };
 
   render() {
@@ -175,23 +176,6 @@ class UserRegistrationForm extends Component {
             <span className="text text-danger">{this.state.errors.email}</span>
           </div>
           <div className="col-6">
-            {/* <span type="label">User Type</span>
-
-            <div className="btn-group">
-              <button
-                type="button"
-                className="btn dropdown-toggle"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                <span className="float-left">Customer</span>
-              </button>
-              <div className="dropdown-menu dropdown-menu-right">
-                <option>Customer</option>
-                <option>Admin</option>
-              </div>
-            </div> */}
             <DropdownField
               value={this.state.values.userType}
               type="dropdown"
@@ -199,26 +183,50 @@ class UserRegistrationForm extends Component {
               onChange={this.handleChangeValue}
               label="User Type"
             >
-              {this.props.userType.map((type, index) => {
-                return <option key={index}>{type.userType}</option>;
-              })}
+              {this.renderUserType()}
             </DropdownField>
           </div>
         </div>
         <div>
           <Button className="btn btn-success mr-2">Register</Button>
-          <Button onClick={() => {}} className="btn btn-primary">
+          <Button
+            onClick={() => {
+              console.log("click update");
+              const { values } = this.state;
+              this.props.dispatch(updateUserAction(values));
+            }}
+            className="btn btn-primary"
+          >
             Update
           </Button>
         </div>
       </form>
     );
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    // console.log("ComponentDidUpdate");
+    // console.log("preProps.userEdit: ", prevProps.userEdit);
+    // console.log("props.userEdit: ", this.props.userEdit);
+    if (prevProps.userEdit.userId !== this.props.userEdit.userId) {
+      const newValue = {
+        username: this.props.userEdit.username,
+        fullName: this.props.userEdit.fullName,
+        password: this.props.userEdit.password,
+        email: this.props.userEdit.username,
+        phoneNumber: this.props.userEdit.phoneNumber,
+        userType: this.props.userEdit.userType,
+      };
+      this.setState({
+        values: newValue,
+      });
+    }
+  }
 }
 
 const mapStateToProps = (state) => {
   return {
-    userType: state.UserManagementReducer.userType,
+    ...state.UserManagementReducer,
   };
 };
 

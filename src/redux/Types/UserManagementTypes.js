@@ -1,4 +1,4 @@
-export const edit_user = "edit_user";
-export const remove_user = "remove_user";
-export const register_user = "register_user";
-export const change_user = "change_user";
+export const EDIT_USER = "EDIT_USER";
+export const REMOVE_USER = "REMOVE_USER";
+export const REGISTER_USER = "REGISTER_USER";
+export const UPDATE_USER = "UPDATE_USER";

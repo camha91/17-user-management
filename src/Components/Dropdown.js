@@ -15,10 +15,7 @@ const Dropdown = styled.select`
   color: #343a40;
   padding: 10px;
   padding-right: 38px;
-  appearance: none;
   margin: 10px 0px 10px 0px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
   /* Adding transition effect */
   transition: color 0.3s ease, background-color 0.3s ease,
     border-bottom-color 0.3s ease;
