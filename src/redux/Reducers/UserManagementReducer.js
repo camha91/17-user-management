@@ -4,6 +4,7 @@ import {
   REMOVE_USER,
   UPDATE_USER,
 } from "../Types/UserManagementTypes";
+import Swal from "sweetalert2";
 
 const initialState = {
   userType: { 1: "Customer", 2: "Admin", 3: "Editor" },
@@ -21,10 +22,10 @@ const initialState = {
     {
       orderId: 2,
       userId: 2,
-      username: "camha2",
-      fullName: "Camha2 Nguyen",
+      username: "crystal7",
+      fullName: "Crystal Nguyen",
       password: "123",
-      email: "camha2@gmail.com",
+      email: "crystalnguyen@gmail.com",
       phoneNumber: 123,
       userType: 2,
     },
@@ -44,6 +45,7 @@ const UserManagementReducer = (state = initialState, action) => {
   switch (action.type) {
     case REGISTER_USER: {
       const userListUpdate = [...state.userList];
+      let profileContent = "";
       const newUser = {
         userId: Date.now(),
         username: action.newUser.username,
@@ -61,14 +63,29 @@ const UserManagementReducer = (state = initialState, action) => {
 
       // Find if the username is already exist in userList
       if (index !== -1) {
-        alert("Username is already exist!");
+        Swal.fire({
+          title: "Username is already exist!",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
         return { ...state };
+      }
+
+      for (const [key, value] of Object.entries(newUser)) {
+        profileContent += `<p class='text-left'> <b>${key}: </b>${value} </p> `;
       }
 
       // username is not existed in the list, add that new user to the list
       state.userList = [...userListUpdate, newUser];
 
-      alert("Register successfully!");
+      console.log(profileContent);
+      // alert("Register successfully!");
+      Swal.fire({
+        title: "Your Profile!",
+        html: profileContent,
+        icon: "success",
+        confirmButtonText: "OK",
+      });
 
       return { ...state };
     }
@@ -79,7 +96,11 @@ const UserManagementReducer = (state = initialState, action) => {
       );
 
       if (checkUsername !== -1) {
-        alert("Username is already exist!");
+        Swal.fire({
+          title: "Username is already exist!",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
         return { ...state };
       }
 

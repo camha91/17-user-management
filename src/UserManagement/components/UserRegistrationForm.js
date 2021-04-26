@@ -8,6 +8,7 @@ import {
   registerUserAction,
   updateUserAction,
 } from "../../redux/Actions/UserManagementActions";
+import Swal from "sweetalert2";
 
 class UserRegistrationForm extends Component {
   state = {
@@ -72,21 +73,29 @@ class UserRegistrationForm extends Component {
     const { values, errors } = this.state;
 
     let valid = true;
+    let errorsContent = "";
 
     for (let key in values) {
       if (values[key] === "") {
+        errorsContent += `<p className='text-left'> <b className='text-danger'>${key} is invalid!</b></p>`;
         valid = false;
       }
     }
 
     for (let key in errors) {
       if (errors[key] !== "") {
+        errorsContent += `<p className='text-left'> <b className='text-danger'>${key} is invalid!</b></p>`;
         valid = false;
       }
     }
 
     if (!valid) {
-      alert("Please check all fields!");
+      Swal.fire({
+        title: "Your Profile!",
+        html: errorsContent,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
       return;
     }
 
