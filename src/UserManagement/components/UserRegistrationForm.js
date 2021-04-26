@@ -27,6 +27,7 @@ class UserRegistrationForm extends Component {
       phoneNumber: "",
       email: "",
     },
+    disabled: true,
   };
 
   handleChangeValue = (e) => {
@@ -69,8 +70,20 @@ class UserRegistrationForm extends Component {
 
   handleRegister = (e) => {
     e.preventDefault();
+    const initialValues = {
+      username: "",
+      fullName: "",
+      password: "",
+      phoneNumber: "",
+      email: "",
+      userType: "1",
+    };
 
     const { values, errors } = this.state;
+
+    if (JSON.stringify(values) === JSON.stringify(initialValues)) {
+      return;
+    }
 
     let valid = true;
     let errorsContent = "";
@@ -198,16 +211,37 @@ class UserRegistrationForm extends Component {
         </div>
         <div>
           <Button className="btn btn-success mr-2">Register</Button>
-          <Button
-            onClick={() => {
-              console.log("click update");
-              const { values } = this.state;
-              this.props.dispatch(updateUserAction(values));
-            }}
-            className="btn btn-primary"
-          >
-            Update
-          </Button>
+          {!this.props.isUpdateAvailable ? (
+            <Button disabled className="btn btn-primary">
+              Update
+            </Button>
+          ) : (
+            <Button
+              onClick={() => {
+                console.log("Click Update");
+                const { values } = this.state;
+                this.setState(
+                  {
+                    values: {
+                      username: "",
+                      fullName: "",
+                      password: "",
+                      phoneNumber: "",
+                      email: "",
+                      userType: "1",
+                    },
+                  },
+                  () => {
+                    console.log("values: ", values);
+                    this.props.dispatch(updateUserAction(values));
+                  }
+                );
+              }}
+              className="btn btn-primary"
+            >
+              Update
+            </Button>
+          )}
         </div>
       </form>
     );

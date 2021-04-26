@@ -39,6 +39,7 @@ const initialState = {
     phoneNumber: 123,
     userType: 1,
   },
+  isUpdateAvailable: false,
 };
 
 const UserManagementReducer = (state = initialState, action) => {
@@ -55,7 +56,6 @@ const UserManagementReducer = (state = initialState, action) => {
         email: action.newUser.email,
         userType: action.newUser.userType,
       };
-      console.log(newUser);
 
       const index = userListUpdate.findIndex(
         (user) => user.username === action.newUser.username
@@ -137,7 +137,7 @@ const UserManagementReducer = (state = initialState, action) => {
     case EDIT_USER: {
       // Fill in the fields to edit user
       console.log("action edit_user: ", action);
-      return { ...state, userEdit: action.user };
+      return { ...state, userEdit: action.user, isUpdateAvailable: true };
     }
     case REMOVE_USER: {
       return {

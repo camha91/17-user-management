@@ -23,7 +23,6 @@ class UserListTable extends Component {
           <Td>
             <Button
               onClick={() => {
-                console.log("click edit");
                 this.props.dispatch(editUserAction(user));
               }}
               className="btn btn-primary mr-2"
