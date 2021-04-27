@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Button } from "../../Components/Button";
 import { DropdownField } from "../../Components/Dropdown";
-import { Heading1 } from "../../Components/Heading";
+import { Heading2 } from "../../Components/Heading";
 import { TextField } from "../../Components/TextField";
 import {
   registerUserAction,
@@ -27,7 +27,7 @@ class UserRegistrationForm extends Component {
       phoneNumber: "",
       email: "",
     },
-    disabled: true,
+    // disabled: true,
   };
 
   handleChangeValue = (e) => {
@@ -113,15 +113,26 @@ class UserRegistrationForm extends Component {
     }
 
     this.props.dispatch(registerUserAction(values));
+
+    this.setState({
+      values: {
+        username: "",
+        fullName: "",
+        password: "",
+        phoneNumber: "",
+        email: "",
+        userType: "1",
+      },
+    });
   };
 
   renderUserType = () => {
     const { userType } = this.props;
 
-    return Object.entries(userType).map(([propsUserType, type], index) => {
+    return Object.keys(userType).map((type, index) => {
       return (
-        <option value={propsUserType} key={index}>
-          {type}
+        <option value={type} key={index}>
+          {userType[type]}
         </option>
       );
     });
@@ -130,7 +141,7 @@ class UserRegistrationForm extends Component {
   render() {
     return (
       <form onSubmit={this.handleRegister}>
-        <Heading1>User Registration</Heading1>
+        <Heading2>User Registration</Heading2>
 
         <div className="row">
           <div className="col-6">

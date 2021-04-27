@@ -69,39 +69,38 @@ const UserManagementReducer = (state = initialState, action) => {
           confirmButtonText: "OK",
         });
         return { ...state };
+      } else {
+        for (const [key, value] of Object.entries(newUser)) {
+          profileContent += `<p class='text-left'> <b>${key}: </b>${value} </p> `;
+        }
+        // username is not existed in the list, add that new user to the list
+        state.userList = [...userListUpdate, newUser];
+
+        Swal.fire({
+          title: "Your Profile!",
+          html: profileContent,
+          icon: "success",
+          confirmButtonText: "OK",
+        });
       }
-
-      for (const [key, value] of Object.entries(newUser)) {
-        profileContent += `<p class='text-left'> <b>${key}: </b>${value} </p> `;
-      }
-
-      // username is not existed in the list, add that new user to the list
-      state.userList = [...userListUpdate, newUser];
-
-      console.log(profileContent);
-      // alert("Register successfully!");
-      Swal.fire({
-        title: "Your Profile!",
-        html: profileContent,
-        icon: "success",
-        confirmButtonText: "OK",
-      });
 
       return { ...state };
     }
 
     case UPDATE_USER: {
-      const checkUsername = state.userList.findIndex(
-        (user) => user.username === action.user.username
-      );
+      if (action.user.username !== state.userEdit.username) {
+        const checkUsername = state.userList.findIndex(
+          (user) => user.username === action.user.username
+        );
 
-      if (checkUsername !== -1) {
-        Swal.fire({
-          title: "Username is already exist!",
-          icon: "error",
-          confirmButtonText: "OK",
-        });
-        return { ...state };
+        if (checkUsername !== -1) {
+          Swal.fire({
+            title: "Username is already exist!",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+          return { ...state };
+        }
       }
 
       console.log("action.user: ", action.user);

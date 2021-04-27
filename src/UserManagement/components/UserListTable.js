@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Button } from "../../Components/Button";
-import { Heading3 } from "../../Components/Heading";
+import { Heading4 } from "../../Components/Heading";
 import { Table, Tbody, Td, Th, Thead, Tr } from "../../Components/Table";
 import {
   editUserAction,
@@ -45,7 +45,7 @@ class UserListTable extends Component {
   render() {
     return (
       <div>
-        <Heading3>User List</Heading3>
+        <Heading4>User List</Heading4>
         <Table>
           <Thead>
             <Tr>
